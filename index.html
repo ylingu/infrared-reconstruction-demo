@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="./styles.css">
   <script src="./assets/scene17-cloud.js" defer></script>
   <script src="./viewer.js" defer></script>
-  <script src="./app.js" defer></script>
+  <script src="./app.js?v=continuous-playback" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main">跳到内容</a>
@@ -74,7 +74,7 @@
         <button type="button" class="play-button" data-play aria-controls="source-video point-cloud">
           <span class="play-icon" aria-hidden="true"></span><span data-play-label>播放</span>
         </button>
-        <input type="range" min="0" max="19" value="0" step="1" data-seek aria-label="重建窗口的帧位置">
+        <input type="range" min="0" max="20" value="0" step="any" data-seek aria-label="重建窗口的帧位置">
         <output data-position aria-live="off">00 / 19 帧</output>
       </div>
       <p class="media-hint" id="cloud-help">拖动旋转，滚轮或双指缩放。键盘可用方向键和加减号。</p>
@@ -104,29 +104,33 @@
       <div class="strip" tabindex="0" aria-label="同帧对比图像">
         <figure class="media-figure">
           <div class="frame still-frame">
-            <img id="compare-reference" src="./assets/compare/reference/00003.png" alt="第 03 帧真值">
+            <img id="compare-reference" src="./assets/compare/reference/00001.png" alt="第 01 帧真值">
           </div>
           <figcaption class="strip-caption">真值</figcaption>
         </figure>
         <figure class="media-figure">
           <div class="frame still-frame">
-            <img id="compare-baseline" src="./assets/compare/tapip3d/00003.png" alt="DGGT 加 TAPIP3D 的第 03 帧">
+            <img id="compare-baseline" src="./assets/compare/tapip3d/00001.png" alt="DGGT 加 TAPIP3D 的第 01 帧">
           </div>
           <figcaption class="strip-caption" id="baseline-caption">DGGT + TAPIP3D</figcaption>
         </figure>
         <figure class="media-figure">
           <div class="frame still-frame">
-            <img id="compare-physir" src="./assets/compare/physir/00003.png" alt="PhysIR 默认 TI 的第 03 帧">
+            <img id="compare-physir" src="./assets/compare/physir/00001.png" alt="PhysIR 默认 TI 的第 01 帧">
           </div>
           <figcaption class="strip-caption">PhysIR · 默认 TI</figcaption>
         </figure>
       </div>
       <p class="strip-hint">横向滑动查看全部对比图。</p>
-      <div class="transport comparison-transport" role="group" aria-label="插值帧选择">
-        <label class="transport-label" for="comparison-frame">插值帧</label>
-        <input id="comparison-frame" type="range" min="0" max="11" value="2" step="1" aria-valuetext="第 03 帧">
-        <output id="comparison-position" for="comparison-frame">第 03 帧</output>
+      <div class="transport" id="comparison-controls" role="group" aria-label="二维对比同步播放" data-frame-rate="5">
+        <button type="button" class="play-button" data-play disabled aria-controls="compare-reference compare-baseline compare-physir">
+          <span class="play-icon" aria-hidden="true"></span><span data-play-label>加载中</span>
+        </button>
+        <input id="comparison-frame" type="range" min="0" max="12" value="0" step="any" data-seek disabled
+          aria-label="二维对比进度" aria-valuetext="第 01 帧">
+        <output id="comparison-position" for="comparison-frame" data-position aria-live="off">第 01 帧</output>
       </div>
+      <p class="media-error" id="comparison-error" role="status" hidden>对比图像加载失败，请刷新后重试。</p>
     </section>
 
     <section id="masks" class="content-section masks" aria-labelledby="masks-title">
@@ -164,7 +168,7 @@
         <button type="button" class="play-button" data-play aria-controls="mask-start mask-middle mask-end">
           <span class="play-icon" aria-hidden="true"></span><span data-play-label>播放</span>
         </button>
-        <input type="range" min="0" max="6" value="0" step="1" data-seek aria-label="掩码视频进度">
+        <input type="range" min="0" max="7" value="0" step="any" data-seek aria-label="掩码视频进度">
         <output data-position aria-live="off">00 / 06 帧</output>
       </div>
       <p class="media-error" id="mask-error" role="status" hidden>掩码视频加载失败，请刷新页面后再试。</p>
