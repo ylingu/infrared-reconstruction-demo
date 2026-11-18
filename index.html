@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f7f9f8">
+  <meta name="theme-color" content="#f7f9fc">
   <meta name="description" content="红外动态场景重建演示，包含原始序列、可交互点云、二维对比和运动掩码。">
   <title>红外动态场景重建</title>
   <link rel="stylesheet" href="./styles.css">
@@ -13,27 +13,27 @@
 </head>
 <body id="top">
   <a class="skip-link" href="#main">跳到内容</a>
-  <header class="site-header">
-    <div class="shell header-inner">
-      <a class="brand" href="#top">
-        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
-        <span>红外重建</span>
-      </a>
-      <nav class="site-nav" aria-label="页面目录">
-        <a href="#reconstruction">动态点云</a>
-        <a href="#comparison">二维对比</a>
-        <a href="#masks">动态掩码</a>
-      </nav>
-    </div>
+  <header class="shell paper-header" aria-labelledby="project-title">
+    <h1 id="project-title">红外动态场景重建</h1>
+    <p class="paper-title">[PAPER_TITLE]</p>
+    <ul class="paper-authors" aria-label="作者">
+      <li>[AUTHOR_1]<sup>1</sup></li>
+      <li>[AUTHOR_2]<sup>1</sup></li>
+      <li>[AUTHOR_3]<sup>2</sup></li>
+    </ul>
+    <ul class="paper-affiliations" aria-label="作者单位">
+      <li><sup>1</sup> [AFFILIATION_1]</li>
+      <li><sup>2</sup> [AFFILIATION_2]</li>
+    </ul>
+    <nav class="paper-actions" aria-label="论文与演示资源">
+      <a href="#paper-url">Paper</a>
+      <a class="paper-action-primary" href="#reconstruction">Interactive</a>
+      <a href="#code-url">Code</a>
+      <a href="#bibtex">BibTeX</a>
+    </nav>
   </header>
 
   <main id="main" class="shell">
-    <div class="intro">
-      <p class="intro-status"><span aria-hidden="true"></span>展示页原型</p>
-      <h1>红外动态场景重建</h1>
-      <p class="intro-summary">并排观察热红外视频、三维场景和运动区域。</p>
-    </div>
-
     <section id="reconstruction" class="content-section reconstruction" aria-labelledby="reconstruction-title">
       <div class="section-heading">
         <h2 id="reconstruction-title">动态点云</h2>
@@ -79,6 +79,13 @@
       </div>
       <p class="media-hint" id="cloud-help">拖动旋转，滚轮或双指缩放。键盘可用方向键和加减号。</p>
       <p class="media-error" id="source-error" role="status" hidden>视频加载失败，请刷新页面后再试。</p>
+    </section>
+
+    <section id="abstract" class="content-section abstract" aria-labelledby="abstract-title">
+      <div class="text-column">
+        <h2 id="abstract-title">摘要</h2>
+        <p class="abstract-body"><code class="placeholder-token">[ABSTRACT]</code></p>
+      </div>
     </section>
 
     <section id="comparison" class="content-section" aria-labelledby="comparison-title">
@@ -161,6 +168,32 @@
         <output data-position aria-live="off">00 / 06 帧</output>
       </div>
       <p class="media-error" id="mask-error" role="status" hidden>掩码视频加载失败，请刷新页面后再试。</p>
+    </section>
+
+    <section id="bibtex" class="content-section" aria-labelledby="bibtex-title">
+      <div class="text-column">
+        <div class="section-heading citation-heading">
+          <h2 id="bibtex-title">BibTeX</h2>
+          <button type="button" id="copy-bibtex" class="copy-button" hidden>复制 BibTeX</button>
+        </div>
+        <pre class="citation-block"><code id="bibtex-entry">@misc{PAPER_KEY,
+  title  = {[PAPER_TITLE]},
+  author = {[AUTHOR_1] and [AUTHOR_2] and [AUTHOR_3]},
+  year   = {[YEAR]},
+  url    = {[PAPER_URL]}
+}</code></pre>
+        <p id="copy-status" class="copy-status" role="status" hidden></p>
+        <dl class="resource-placeholders" aria-label="待补充的资源链接">
+          <div id="paper-url" tabindex="-1">
+            <dt>Paper</dt>
+            <dd><code class="placeholder-token">[PAPER_URL]</code></dd>
+          </div>
+          <div id="code-url" tabindex="-1">
+            <dt>Code</dt>
+            <dd><code class="placeholder-token">[CODE_URL]</code></dd>
+          </div>
+        </dl>
+      </div>
     </section>
     <noscript><p>启用 JavaScript 后可以播放视频、旋转点云和切换对比。</p></noscript>
   </main>

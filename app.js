@@ -159,3 +159,19 @@ function updateComparison() {
 baseline.addEventListener('change', updateComparison);
 comparisonFrame.addEventListener('input', updateComparison);
 updateComparison();
+
+const copyBibtex = document.querySelector('#copy-bibtex');
+const copyStatus = document.querySelector('#copy-status');
+if (navigator.clipboard?.writeText) {
+  copyBibtex.hidden = false;
+  copyBibtex.addEventListener('click', async () => {
+    const entry = document.querySelector('#bibtex-entry').textContent;
+    try {
+      await navigator.clipboard.writeText(entry);
+      copyStatus.textContent = '已复制 BibTeX。';
+    } catch {
+      copyStatus.textContent = '请选择引用文本并手动复制。';
+    }
+    copyStatus.hidden = false;
+  });
+}
