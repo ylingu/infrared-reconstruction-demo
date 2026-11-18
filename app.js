@@ -26,7 +26,9 @@ class PlaybackGroup {
       if (video.error) this.fail();
     }
     this.watchFrames();
-    this.updateFrame(0);
+    this.updateTime();
+    this.setPlaying(!this.master.paused);
+    if (this.master.autoplay && !this.button.disabled) void this.play();
   }
 
   watchFrames() {
@@ -51,17 +53,25 @@ class PlaybackGroup {
     this.setPlaying(false);
   }
 
-  async togglePlayback() {
+  togglePlayback() {
     if (!this.master.paused) {
       this.pause();
       return;
     }
 
     if (this.master.ended) this.seek(0);
+    void this.play();
+  }
+
+  async play() {
     try {
       await Promise.all(this.videos.map((video) => video.play()));
     } catch (error) {
       if (error.name === 'AbortError') return;
+      if (error.name === 'NotAllowedError') {
+        this.pause();
+        return;
+      }
       this.fail();
     }
   }
@@ -74,8 +84,9 @@ class PlaybackGroup {
 
   updateTime(mediaTime = this.master.currentTime) {
     const time = this.master.currentTime;
+    const maxDrift = 0.5 / this.frameRate;
     for (const video of this.followers) {
-      if (video.readyState > 0 && Math.abs(video.currentTime - time) > 0.16) {
+      if (video.readyState > 0 && !video.seeking && Math.abs(video.currentTime - time) > maxDrift) {
         video.currentTime = Math.min(time, video.duration);
       }
     }
