@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f9f8">
+  <meta name="description" content="红外动态场景重建演示，包含原始序列、可交互点云、二维对比和运动掩码。">
+  <title>红外动态场景重建</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./assets/scene17-cloud.js" defer></script>
+  <script src="./viewer.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body id="top">
+  <a class="skip-link" href="#main">跳到内容</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="#top">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span>红外重建</span>
+      </a>
+      <nav class="site-nav" aria-label="页面目录">
+        <a href="#reconstruction">动态点云</a>
+        <a href="#comparison">二维对比</a>
+        <a href="#masks">动态掩码</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="shell">
+    <div class="intro">
+      <p class="intro-status"><span aria-hidden="true"></span>展示页原型</p>
+      <h1>红外动态场景重建</h1>
+      <p class="intro-summary">并排观察热红外视频、三维场景和运动区域。</p>
+    </div>
+
+    <section id="reconstruction" class="content-section reconstruction" aria-labelledby="reconstruction-title">
+      <div class="section-heading">
+        <h2 id="reconstruction-title">动态点云</h2>
+        <p class="dataset">Dynamic_LTR <span aria-hidden="true">/</span> scene17</p>
+      </div>
+      <div class="hero-media">
+        <figure class="media-figure">
+          <figcaption class="figure-heading">
+            <span class="figure-title">原始红外视频</span>
+            <span class="figure-note">20 帧 · 预览 5 fps</span>
+          </figcaption>
+          <div class="frame thermal-frame">
+            <video id="source-video" src="./assets/scene17.mp4" poster="./assets/scene17.jpg"
+              preload="metadata" muted playsinline aria-label="scene17 原始红外视频"></video>
+          </div>
+        </figure>
+        <figure class="media-figure">
+          <figcaption class="figure-heading">
+            <span class="figure-title">交互式点云</span>
+            <span class="figure-note placeholder-note">占位 · 近似几何</span>
+          </figcaption>
+          <div class="frame cloud-frame">
+            <canvas id="point-cloud" tabindex="0" aria-label="动态三维点云"
+              aria-describedby="cloud-help">请使用支持 Canvas 的浏览器查看点云。</canvas>
+            <div class="cloud-toolbar">
+              <button id="reset-view" type="button" class="viewer-button">
+                <span class="reset-icon" aria-hidden="true">↺</span>复位视角
+              </button>
+            </div>
+            <div class="cloud-legend" aria-label="点云颜色图例">
+              <span><i class="legend-dot structure-dot" aria-hidden="true"></i>场景结构</span>
+              <span><i class="legend-dot motion-dot" aria-hidden="true"></i>运动区域</span>
+            </div>
+          </div>
+        </figure>
+      </div>
+      <div class="transport" id="reconstruction-controls" role="group" aria-label="视频与点云同步播放" data-frame-rate="5">
+        <button type="button" class="play-button" data-play aria-controls="source-video point-cloud">
+          <span class="play-icon" aria-hidden="true"></span><span data-play-label>播放</span>
+        </button>
+        <input type="range" min="0" max="19" value="0" step="1" data-seek aria-label="重建窗口的帧位置">
+        <output data-position aria-live="off">00 / 19 帧</output>
+      </div>
+      <p class="media-hint" id="cloud-help">拖动旋转，滚轮或双指缩放。键盘可用方向键和加减号。</p>
+      <p class="media-error" id="source-error" role="status" hidden>视频加载失败，请刷新页面后再试。</p>
+    </section>
+
+    <section id="comparison" class="content-section" aria-labelledby="comparison-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="comparison-title">二维方法对比</h2>
+          <p class="section-summary">Dynamic_LTR 的 scene17。同一插值帧下查看真值与各方法输出。</p>
+        </div>
+        <label class="select-field" for="baseline">对比方法
+          <select id="baseline">
+            <option value="tapip3d">DGGT + TAPIP3D</option>
+            <option value="rife">DGGT + RIFE 合成输入</option>
+          </select>
+        </label>
+      </div>
+      <div class="strip" tabindex="0" aria-label="同帧对比图像">
+        <figure class="media-figure">
+          <div class="frame still-frame">
+            <img id="compare-reference" src="./assets/compare/reference/00003.png" alt="第 03 帧真值">
+          </div>
+          <figcaption class="strip-caption">真值</figcaption>
+        </figure>
+        <figure class="media-figure">
+          <div class="frame still-frame">
+            <img id="compare-baseline" src="./assets/compare/tapip3d/00003.png" alt="DGGT 加 TAPIP3D 的第 03 帧">
+          </div>
+          <figcaption class="strip-caption" id="baseline-caption">DGGT + TAPIP3D</figcaption>
+        </figure>
+        <figure class="media-figure">
+          <div class="frame still-frame">
+            <img id="compare-physir" src="./assets/compare/physir/00003.png" alt="PhysIR 默认 TI 的第 03 帧">
+          </div>
+          <figcaption class="strip-caption">PhysIR · 默认 TI</figcaption>
+        </figure>
+      </div>
+      <p class="strip-hint">横向滑动查看全部对比图。</p>
+      <div class="transport comparison-transport" role="group" aria-label="插值帧选择">
+        <label class="transport-label" for="comparison-frame">插值帧</label>
+        <input id="comparison-frame" type="range" min="0" max="11" value="2" step="1" aria-valuetext="第 03 帧">
+        <output id="comparison-position" for="comparison-frame">第 03 帧</output>
+      </div>
+    </section>
+
+    <section id="masks" class="content-section masks" aria-labelledby="masks-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="masks-title">动态掩码</h2>
+          <p class="section-summary">三段预览取自 scene17。橙色为现有运动标注，先用于展示掩码版式。</p>
+        </div>
+      </div>
+      <div class="strip" tabindex="0" aria-label="并排的三段动态掩码视频">
+        <figure class="media-figure">
+          <div class="frame mask-frame">
+            <video id="mask-start" src="./assets/mask-start.mp4" poster="./assets/mask-start.jpg"
+              preload="metadata" muted playsinline aria-label="起始段运动掩码视频"></video>
+          </div>
+          <figcaption class="strip-caption">起始段 <span>00–06 帧</span></figcaption>
+        </figure>
+        <figure class="media-figure">
+          <div class="frame mask-frame">
+            <video id="mask-middle" src="./assets/mask-middle.mp4" poster="./assets/mask-middle.jpg"
+              preload="metadata" muted playsinline aria-label="中段运动掩码视频"></video>
+          </div>
+          <figcaption class="strip-caption">中段 <span>07–13 帧</span></figcaption>
+        </figure>
+        <figure class="media-figure">
+          <div class="frame mask-frame">
+            <video id="mask-end" src="./assets/mask-end.mp4" poster="./assets/mask-end.jpg"
+              preload="metadata" muted playsinline aria-label="末段运动掩码视频"></video>
+          </div>
+          <figcaption class="strip-caption">末段 <span>14–19 帧</span></figcaption>
+        </figure>
+      </div>
+      <p class="strip-hint">横向滑动查看三段视频。</p>
+      <div class="transport" id="mask-controls" role="group" aria-label="三段掩码同步播放" data-frame-rate="5">
+        <button type="button" class="play-button" data-play aria-controls="mask-start mask-middle mask-end">
+          <span class="play-icon" aria-hidden="true"></span><span data-play-label>播放</span>
+        </button>
+        <input type="range" min="0" max="6" value="0" step="1" data-seek aria-label="掩码视频进度">
+        <output data-position aria-live="off">00 / 06 帧</output>
+      </div>
+      <p class="media-error" id="mask-error" role="status" hidden>掩码视频加载失败，请刷新页面后再试。</p>
+    </section>
+    <noscript><p>启用 JavaScript 后可以播放视频、旋转点云和切换对比。</p></noscript>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <span>红外动态场景重建</span>
+      <a href="#top">回到顶部 ↑</a>
+    </div>
+  </footer>
+</body>
+</html>
