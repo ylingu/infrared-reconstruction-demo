@@ -1,211 +1,611 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f7f9fc">
-  <meta name="description" content="红外动态场景重建演示，包含原始序列、可交互点云、二维对比和运动掩码。">
-  <title>红外动态场景重建</title>
+  <meta name="theme-color" content="#F7F9FC">
+  <meta name="description" content="Dynamic 3D and 4D infrared scene reconstruction project page featuring synchronized thermal sequences, interactive 3D point cloud, 2D qualitative comparisons, and dynamic motion masks.">
+  <title>Physically Consistent Dynamic 3D Scene Reconstruction from Monocular Infrared Sequences</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23005BAC'/%3E%3Cpath d='M16 6L25 11V21L16 26L7 21V11L16 6Z' fill='none' stroke='%23FFFFFF' stroke-width='2.2' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='16' r='3.5' fill='%23FF9E57'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="./styles.css">
   <script src="./assets/scene17-cloud.js" defer></script>
   <script src="./viewer.js" defer></script>
-  <script src="./app.js?v=continuous-playback" defer></script>
+  <script src="./app.js" defer></script>
 </head>
 <body id="top">
-  <a class="skip-link" href="#main">跳到内容</a>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="utility-bar">
+    <div class="shell utility-inner">
+      <span class="draft-badge">Draft Preview · Template Copy</span>
+      <nav class="top-nav" aria-label="Page sections">
+        <a href="#reconstruction">Reconstruction</a>
+        <a href="#abstract">Abstract</a>
+        <a href="#method">Method</a>
+        <a href="#comparison">Comparison</a>
+        <a href="#results">Results</a>
+        <a href="#masks">Masks</a>
+        <a href="#bibtex">BibTeX</a>
+      </nav>
+    </div>
+  </div>
+
   <header class="shell paper-header" aria-labelledby="project-title">
-    <h1 id="project-title">红外动态场景重建</h1>
-    <p class="paper-title">[PAPER_TITLE]</p>
-    <ul class="paper-authors" aria-label="作者">
-      <li>[AUTHOR_1]<sup>1</sup></li>
-      <li>[AUTHOR_2]<sup>1</sup></li>
-      <li>[AUTHOR_3]<sup>2</sup></li>
+    <!-- REPLACE: Final paper title -->
+    <h1 id="project-title">Physically Consistent Dynamic 3D Scene Reconstruction from Monocular Infrared Sequences</h1>
+    <!-- REPLACE: Final author list and affiliations -->
+    <ul class="paper-authors" aria-label="Authors">
+      <li>Author One<sup>1</sup></li>
+      <li>Author Two<sup>1</sup></li>
+      <li>Author Three<sup>2</sup></li>
     </ul>
-    <ul class="paper-affiliations" aria-label="作者单位">
-      <li><sup>1</sup> [AFFILIATION_1]</li>
-      <li><sup>2</sup> [AFFILIATION_2]</li>
+    <ul class="paper-affiliations" aria-label="Affiliations">
+      <li><sup>1</sup> Beihang University</li>
+      <li><sup>2</sup> Collaborating Institution</li>
     </ul>
-    <nav class="paper-actions" aria-label="论文与演示资源">
-      <a href="#paper-url">Paper</a>
-      <a class="paper-action-primary" href="#reconstruction">Interactive</a>
-      <a href="#code-url">Code</a>
-      <a href="#bibtex">BibTeX</a>
-    </nav>
+
+    <div class="hero-meta-bar">
+      <nav class="paper-actions" aria-label="Paper resources">
+        <a class="btn btn-primary" href="#reconstruction">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M8 1.75L13.5 4.85V11.15L8 14.25L2.5 11.15V4.85L8 1.75Z"/>
+            <path d="M2.5 4.85L8 7.95L13.5 4.85"/>
+            <path d="M8 7.95V14.25"/>
+          </svg>
+          <span>Interactive Demo</span>
+        </a>
+        <!-- REPLACE: Replace with <a class="btn btn-secondary" href="YOUR_PAPER_URL">Paper</a> when available -->
+        <span class="btn btn-soon" aria-disabled="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 2.25H9.75L12.75 5.25V13.75H4C3.45 13.75 3 13.3 3 12.75V3.25C3 2.7 3.45 2.25 4 2.25Z"/>
+            <path d="M9.5 2.25V5.5H12.75"/>
+          </svg>
+          <span>Paper</span>
+          <span class="soon-tag">Coming Soon</span>
+        </span>
+        <!-- REPLACE: Replace with <a class="btn btn-secondary" href="YOUR_CODE_URL">Code</a> when available -->
+        <span class="btn btn-soon" aria-disabled="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5.5 4.5L2 8L5.5 11.5"/>
+            <path d="M10.5 4.5L14 8L10.5 11.5"/>
+            <path d="M8.75 3.5L7.25 12.5"/>
+          </svg>
+          <span>Code</span>
+          <span class="soon-tag">Coming Soon</span>
+        </span>
+        <a class="btn btn-secondary" href="#bibtex">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 4.5H12"/>
+            <path d="M4 8H12"/>
+            <path d="M4 11.5H9"/>
+          </svg>
+          <span>BibTeX</span>
+        </a>
+      </nav>
+
+      <div class="hero-badges">
+        <!-- REPLACE: Update venue or preprint badge once finalized -->
+        <span class="meta-pill">Preprint · Under Preparation</span>
+        <span class="meta-pill mono-pill">Dynamic_LTR / scene17</span>
+      </div>
+    </div>
+
+    <div class="tldr-box">
+      <!-- REPLACE: Final one-sentence TL;DR summary -->
+      <p><strong>TL;DR:</strong> We reconstruct dynamically evolving 3D scenes from monocular thermal infrared sequences by decoupling persistent static thermal structure from moving objects under physically consistent spatiotemporal regularization.</p>
+    </div>
   </header>
 
   <main id="main" class="shell">
     <section id="reconstruction" class="content-section reconstruction" aria-labelledby="reconstruction-title">
       <div class="section-heading">
-        <h2 id="reconstruction-title">动态点云</h2>
-        <p class="dataset">Dynamic_LTR <span aria-hidden="true">/</span> scene17</p>
+        <div>
+          <h2 id="reconstruction-title">Dynamic Point Cloud</h2>
+          <p class="section-summary">Synchronized thermal sequence and interactive 3D point-cloud preview from Dynamic_LTR.</p>
+        </div>
+        <p class="meta-pill mono-pill">Dynamic_LTR / scene17</p>
       </div>
+
       <div class="hero-media">
         <figure class="media-figure">
           <figcaption class="figure-heading">
-            <span class="figure-title">原始红外视频</span>
-            <span class="figure-note">20 帧 · 预览 5 fps</span>
+            <span class="figure-title">Input Thermal Video</span>
+            <span class="figure-note">20 frames · 5 fps</span>
           </figcaption>
           <div class="frame thermal-frame">
             <video id="source-video" src="./assets/scene17.mp4" poster="./assets/scene17.jpg"
-              autoplay loop muted playsinline aria-label="scene17 原始红外视频"></video>
+              autoplay loop muted playsinline aria-label="scene17 input thermal video"></video>
           </div>
         </figure>
+
         <figure class="media-figure">
           <figcaption class="figure-heading">
-            <span class="figure-title">交互式点云</span>
-            <span class="figure-note placeholder-note">占位 · 近似几何</span>
+            <span class="figure-title">Interactive 3D Point Cloud</span>
+            <span class="figure-note notice-note">Approximate Geometry Preview</span>
           </figcaption>
           <div class="frame cloud-frame">
-            <canvas id="point-cloud" tabindex="0" aria-label="动态三维点云"
-              aria-describedby="cloud-help">请使用支持 Canvas 的浏览器查看点云。</canvas>
-            <div class="cloud-toolbar">
-              <button id="reset-view" type="button" class="viewer-button">
-                <span class="reset-icon" aria-hidden="true">↺</span>复位视角
+            <canvas id="point-cloud" tabindex="0" aria-label="Interactive dynamic 3D point cloud"
+              aria-describedby="cloud-help">Enable Canvas in a modern browser to inspect the 3D point cloud.</canvas>
+
+            <div class="cloud-toolbar" role="group" aria-label="Camera view presets">
+              <button type="button" class="hud-btn" data-preset="default" aria-pressed="true">Default</button>
+              <button type="button" class="hud-btn" data-preset="top" aria-pressed="false">Top</button>
+              <button type="button" class="hud-btn" data-preset="front" aria-pressed="false">Front</button>
+              <button type="button" class="hud-btn" id="reset-view" aria-label="Reset camera view">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M3 7.5A5 5 0 1 1 4.5 11.5"/>
+                  <path d="M3 3.75V7.5H6.75"/>
+                </svg>
+                <span>Reset</span>
               </button>
             </div>
-            <div class="cloud-legend" aria-label="点云颜色图例">
-              <span><i class="legend-dot structure-dot" aria-hidden="true"></i>场景结构</span>
-              <span><i class="legend-dot motion-dot" aria-hidden="true"></i>运动区域</span>
+
+            <div class="cloud-layers" role="group" aria-label="Point cloud layer filter">
+              <button type="button" class="hud-btn" data-layer="all" aria-pressed="true">All</button>
+              <button type="button" class="hud-btn" data-layer="structure" aria-pressed="false">
+                <i class="legend-dot structure-dot" aria-hidden="true"></i>
+                <span>Static Structure</span>
+              </button>
+              <button type="button" class="hud-btn" data-layer="motion" aria-pressed="false">
+                <i class="legend-dot motion-dot" aria-hidden="true"></i>
+                <span>Dynamic Motion</span>
+              </button>
             </div>
           </div>
         </figure>
       </div>
-      <div class="transport" id="reconstruction-controls" role="group" aria-label="视频与点云同步播放" data-frame-rate="5">
-        <button type="button" class="play-button" data-play aria-controls="source-video point-cloud">
-          <span class="play-icon" aria-hidden="true"></span><span data-play-label>播放</span>
+
+      <div class="transport" id="reconstruction-controls" role="group" aria-label="Video and point cloud synchronized playback" data-frame-rate="5">
+        <button type="button" class="play-button" data-play aria-controls="source-video point-cloud" data-playing="false">
+          <svg class="icon-play" width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <path d="M4.25 2.75L13 8L4.25 13.25V2.75Z"/>
+          </svg>
+          <svg class="icon-pause" width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <rect x="3.5" y="2.75" width="3.2" height="10.5" rx="0.8"/>
+            <rect x="9.3" y="2.75" width="3.2" height="10.5" rx="0.8"/>
+          </svg>
+          <span data-play-label>Play</span>
         </button>
-        <input type="range" min="0" max="20" value="0" step="any" data-seek aria-label="重建窗口的帧位置">
-        <output data-position aria-live="off">00 / 19 帧</output>
+        <div class="step-group">
+          <button type="button" class="step-button" data-step="-1" aria-label="Previous frame">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M10 3.5L5.5 8L10 12.5"/>
+            </svg>
+          </button>
+          <button type="button" class="step-button" data-step="1" aria-label="Next frame">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 3.5L10.5 8L6 12.5"/>
+            </svg>
+          </button>
+        </div>
+        <input type="range" min="0" max="20" value="0" step="any" data-seek aria-label="Reconstruction timeline frame">
+        <output data-position aria-live="off">00 / 19</output>
       </div>
-      <p class="media-hint" id="cloud-help">拖动旋转，滚轮或双指缩放。键盘可用方向键和加减号。</p>
-      <p class="media-error" id="source-error" role="status" hidden>视频加载失败，请刷新页面后再试。</p>
+      <p class="media-hint" id="cloud-help">Drag to orbit · Scroll or pinch to zoom · Double-click canvas or press R / 0 to reset · Arrow keys and +/- supported.</p>
+      <p class="media-error" id="source-error" role="status" hidden>Failed to load the thermal sequence. Reload the page or verify local media files.</p>
     </section>
 
-    <section id="abstract" class="content-section abstract" aria-labelledby="abstract-title">
-      <div class="text-column">
-        <h2 id="abstract-title">摘要</h2>
-        <p class="abstract-body"><code class="placeholder-token">[ABSTRACT]</code></p>
+    <section id="abstract" class="content-section" aria-labelledby="abstract-title">
+      <div class="abstract-split">
+        <div class="abstract-aside">
+          <h2 id="abstract-title">Abstract</h2>
+          <ul class="keyword-list" aria-label="Research keywords">
+            <li>Monocular Thermal 4D</li>
+            <li>Dynamic Motion Masks</li>
+            <li>Spatiotemporal Geometry</li>
+          </ul>
+        </div>
+        <div>
+          <!-- REPLACE: Final abstract prose -->
+          <p class="abstract-body">
+            Reconstructing dynamic 3D scenes from monocular long-wave infrared (LWIR) video presents coupled geometric and radiometric challenges: low spatial texture suppresses reliable correspondence matching, thermal diffusion blurs object boundaries across time, and moving targets violate multi-view static triangulation assumptions. To address these limitations, we decompose monocular thermal sequences into persistent static scene structure and motion-gated dynamic regions, anchoring spatiotemporal primitives with physically consistent thermal radiance constraints. Evaluated on Dynamic_LTR sequences, this representation aims to preserve crisp structural silhouettes while enabling faithful novel-view synthesis and temporal interpolation across complex moving traffic scenes.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="method" class="content-section" aria-labelledby="method-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="method-title">Method Overview</h2>
+          <p class="section-summary">Conceptual overview of thermal decoupling, spatiotemporal representation, and consistent 4D rendering.</p>
+        </div>
+        <span class="meta-pill notice-pill">Figure Placeholder</span>
+      </div>
+
+      <!-- REPLACE: Final pipeline architecture SVG or exported figure -->
+      <figure class="method-figure">
+        <div class="method-diagram-scroll">
+          <svg class="method-diagram" viewBox="0 0 920 196" role="img" aria-label="Conceptual four-stage reconstruction pipeline diagram: Thermal Sequence to Motion Masking to Spatiotemporal 3D to 4D Synthesis">
+            <defs>
+              <marker id="arrow-head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 1 2 L 8 5 L 1 8 z" fill="#005BAC"/>
+              </marker>
+            </defs>
+
+            <!-- Stage 1 -->
+            <rect x="12" y="24" width="196" height="142" rx="8" fill="#F7F9FC" stroke="#BCCCE0" stroke-width="1.5"/>
+            <rect x="28" y="42" width="164" height="46" rx="4" fill="#0D1720"/>
+            <path d="M40 73 L72 56 L104 66 L138 53 L178 72" fill="none" stroke="#6EC8BD" stroke-width="2"/>
+            <circle cx="128" cy="63" r="6" fill="#FF9E57"/>
+            <text x="28" y="116" fill="#17263B" font-family="IBM Plex Sans, sans-serif" font-size="15" font-weight="600">Thermal Sequence</text>
+            <text x="28" y="140" fill="#4B5B70" font-family="IBM Plex Mono, monospace" font-size="13">LWIR frames (5 fps)</text>
+
+            <line x1="208" y1="95" x2="244" y2="95" stroke="#005BAC" stroke-width="2" marker-end="url(#arrow-head)"/>
+
+            <!-- Stage 2 -->
+            <rect x="248" y="24" width="196" height="142" rx="8" fill="#F7F9FC" stroke="#BCCCE0" stroke-width="1.5"/>
+            <rect x="264" y="42" width="78" height="46" rx="4" fill="#101E28" stroke="#6EC8BD" stroke-width="1.25"/>
+            <text x="303" y="70" text-anchor="middle" fill="#E1EDEF" font-family="IBM Plex Sans, sans-serif" font-size="13" font-weight="500">Static</text>
+            <rect x="350" y="42" width="78" height="46" rx="4" fill="#101E28" stroke="#FF9E57" stroke-width="1.25"/>
+            <text x="389" y="70" text-anchor="middle" fill="#E1EDEF" font-family="IBM Plex Sans, sans-serif" font-size="13" font-weight="500">Motion</text>
+            <text x="264" y="116" fill="#17263B" font-family="IBM Plex Sans, sans-serif" font-size="15" font-weight="600">Motion Masking</text>
+            <text x="264" y="140" fill="#4B5B70" font-family="IBM Plex Mono, monospace" font-size="13">Static vs. dynamic</text>
+
+            <line x1="444" y1="95" x2="480" y2="95" stroke="#005BAC" stroke-width="2" marker-end="url(#arrow-head)"/>
+
+            <!-- Stage 3 -->
+            <rect x="484" y="24" width="196" height="142" rx="8" fill="#EAF3FC" stroke="#005BAC" stroke-width="1.5"/>
+            <circle cx="540" cy="65" r="14" fill="#0D1720" stroke="#6EC8BD" stroke-width="1.5"/>
+            <circle cx="582" cy="65" r="14" fill="#0D1720" stroke="#009BDE" stroke-width="1.5"/>
+            <circle cx="624" cy="65" r="14" fill="#0D1720" stroke="#FF9E57" stroke-width="1.5"/>
+            <text x="500" y="116" fill="#17263B" font-family="IBM Plex Sans, sans-serif" font-size="15" font-weight="600">Spatiotemporal 3D</text>
+            <text x="500" y="140" fill="#003DA6" font-family="IBM Plex Mono, monospace" font-size="13">Canonical + deform</text>
+
+            <line x1="680" y1="95" x2="716" y2="95" stroke="#005BAC" stroke-width="2" marker-end="url(#arrow-head)"/>
+
+            <!-- Stage 4 -->
+            <rect x="720" y="24" width="188" height="142" rx="8" fill="#F7F9FC" stroke="#BCCCE0" stroke-width="1.5"/>
+            <rect x="736" y="42" width="156" height="46" rx="4" fill="#0D1720"/>
+            <rect x="752" y="53" width="52" height="24" rx="3" fill="none" stroke="#6EC8BD" stroke-width="1.5"/>
+            <rect x="822" y="53" width="52" height="24" rx="3" fill="none" stroke="#FF9E57" stroke-width="1.5"/>
+            <text x="736" y="116" fill="#17263B" font-family="IBM Plex Sans, sans-serif" font-size="15" font-weight="600">4D Synthesis</text>
+            <text x="736" y="140" fill="#4B5B70" font-family="IBM Plex Mono, monospace" font-size="13">Interpolated views</text>
+          </svg>
+        </div>
+        <figcaption class="method-caption">
+          <strong>Figure Placeholder:</strong> Conceptual four-stage reconstruction pipeline illustrating sequence ingestion, motion masking, decoupled spatiotemporal 3D modeling, and 4D thermal view synthesis. Replace this schematic with the final paper architecture figure.
+        </figcaption>
+      </figure>
+
+      <div class="method-stages">
+        <div class="stage-item">
+          <h3>Temporal Thermal Decomposition</h3>
+          <p>Identifies dynamic motion masks across contiguous frames so static background structures remain anchored while moving emitters are isolated.</p>
+        </div>
+        <div class="stage-item">
+          <h3>Decoupled Spatiotemporal 3D</h3>
+          <p>Pairs a canonical structural scaffold with time-varying deformation trajectories to handle non-rigid motion under monocular parallax limits.</p>
+        </div>
+        <div class="stage-item">
+          <h3>Physically Regularized Synthesis</h3>
+          <p>Maintains thermal radiance continuity across interpolated timestamps to minimize ghosting and background smear.</p>
+        </div>
       </div>
     </section>
 
     <section id="comparison" class="content-section" aria-labelledby="comparison-title">
       <div class="section-heading">
         <div>
-          <h2 id="comparison-title">二维方法对比</h2>
-          <p class="section-summary">Dynamic_LTR 的 scene17。同一插值帧下查看真值与各方法输出。</p>
+          <h2 id="comparison-title">2D Qualitative Comparison</h2>
+          <p class="section-summary">Dynamic_LTR (scene17) interpolated timestamps. Ground Truth is labeled Reference; DGGT and PhysIR remain Baseline methods.</p>
         </div>
-        <label class="select-field" for="baseline">对比方法
-          <select id="baseline">
-            <option value="tapip3d">DGGT + TAPIP3D</option>
-            <option value="rife">DGGT + RIFE 合成输入</option>
-          </select>
-        </label>
       </div>
-      <div class="strip" tabindex="0" aria-label="同帧对比图像">
-        <figure class="media-figure">
-          <div class="frame still-frame">
-            <img id="compare-reference" src="./assets/compare/reference/00001.png" alt="第 01 帧真值">
-          </div>
-          <figcaption class="strip-caption">真值</figcaption>
-        </figure>
-        <figure class="media-figure">
-          <div class="frame still-frame">
-            <img id="compare-baseline" src="./assets/compare/tapip3d/00001.png" alt="DGGT 加 TAPIP3D 的第 01 帧">
-          </div>
-          <figcaption class="strip-caption" id="baseline-caption">DGGT + TAPIP3D</figcaption>
-        </figure>
-        <figure class="media-figure">
-          <div class="frame still-frame">
-            <img id="compare-physir" src="./assets/compare/physir/00001.png" alt="PhysIR 默认 TI 的第 01 帧">
-          </div>
-          <figcaption class="strip-caption">PhysIR · 默认 TI</figcaption>
-        </figure>
+
+      <div class="compare-controls-bar">
+        <div class="segmented-group" role="group" aria-label="Select DGGT baseline method">
+          <button type="button" class="seg-btn" data-baseline="tapip3d" aria-pressed="true">DGGT + TAPIP3D</button>
+          <button type="button" class="seg-btn" data-baseline="rife" aria-pressed="false">DGGT + RIFE</button>
+        </div>
+        <div class="segmented-group" role="group" aria-label="Comparison view mode">
+          <button type="button" class="seg-btn" data-view-mode="side" aria-pressed="true">Side-by-Side</button>
+          <button type="button" class="seg-btn" data-view-mode="wipe" aria-pressed="false">Split Wipe</button>
+        </div>
       </div>
-      <p class="strip-hint">横向滑动查看全部对比图。</p>
-      <div class="transport" id="comparison-controls" role="group" aria-label="二维对比同步播放" data-frame-rate="5">
-        <button type="button" class="play-button" data-play disabled aria-controls="compare-reference compare-baseline compare-physir">
-          <span class="play-icon" aria-hidden="true"></span><span data-play-label>加载中</span>
+
+      <div id="comparison-side">
+        <div class="compare-grid" aria-label="Side-by-side interpolated frame comparison">
+          <figure class="media-figure compare-card">
+            <div class="frame still-frame">
+              <img id="compare-reference" src="./assets/compare/reference/00001.png" alt="Frame 01 · Reference Ground Truth">
+            </div>
+            <figcaption class="strip-caption">
+              <span>Ground Truth</span>
+              <span class="role-badge is-reference">Reference</span>
+            </figcaption>
+          </figure>
+
+          <figure class="media-figure compare-card">
+            <div class="frame still-frame">
+              <img id="compare-baseline" src="./assets/compare/tapip3d/00001.png" alt="Frame 01 · Baseline DGGT + TAPIP3D">
+            </div>
+            <figcaption class="strip-caption">
+              <span id="baseline-caption">DGGT + TAPIP3D</span>
+              <span class="role-badge is-baseline">Baseline</span>
+            </figcaption>
+          </figure>
+
+          <figure class="media-figure compare-card">
+            <div class="frame still-frame">
+              <img id="compare-physir" src="./assets/compare/physir/00001.png" alt="Frame 01 · Baseline PhysIR (Default TI)">
+            </div>
+            <figcaption class="strip-caption">
+              <span>PhysIR (Default TI)</span>
+              <span class="role-badge is-baseline">Baseline</span>
+            </figcaption>
+          </figure>
+
+          <!-- REPLACE: Insert Ours comparison figure card here once final renders are ready:
+          <figure class="media-figure compare-card is-ours">
+            <div class="frame still-frame">
+              <img id="compare-ours" src="./assets/compare/ours/00001.png" alt="Frame 01 · Ours">
+            </div>
+            <figcaption class="strip-caption">
+              <span>Ours</span>
+              <span class="role-badge is-ours-badge">Ours</span>
+            </figcaption>
+          </figure>
+          -->
+        </div>
+      </div>
+
+      <div id="comparison-wipe" hidden>
+        <div class="wipe-layout">
+          <div class="wipe-stage" id="wipe-stage" style="--wipe: 50%;">
+            <img id="wipe-left-img" class="wipe-img" src="./assets/compare/reference/00001.png" alt="Split wipe left layer: Ground Truth (Reference)">
+            <img id="wipe-right-img" class="wipe-img wipe-img-right" src="./assets/compare/tapip3d/00001.png" alt="Split wipe right layer: DGGT + TAPIP3D (Baseline)">
+            <span class="wipe-badge wipe-badge-left" id="wipe-left-badge">Reference · Ground Truth</span>
+            <span class="wipe-badge wipe-badge-right" id="wipe-right-badge">Baseline · DGGT + TAPIP3D</span>
+            <div class="wipe-divider" aria-hidden="true"></div>
+            <button type="button" id="wipe-handle" class="wipe-handle" role="slider"
+              aria-label="Split wipe divider position" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M6.5 5.5L3 9L6.5 12.5"/>
+                <path d="M11.5 5.5L15 9L11.5 12.5"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="wipe-inspector">
+            <div class="wipe-field">
+              <label for="wipe-left-select">Left Layer</label>
+              <select id="wipe-left-select">
+                <option value="reference" selected>Ground Truth (Reference)</option>
+                <option value="dggt">Active DGGT Baseline</option>
+                <option value="physir">PhysIR (Default TI)</option>
+                <!-- REPLACE: Add <option value="ours">Ours</option> when Ours frames exist -->
+              </select>
+            </div>
+            <div class="wipe-field">
+              <label for="wipe-right-select">Right Layer</label>
+              <select id="wipe-right-select">
+                <option value="reference">Ground Truth (Reference)</option>
+                <option value="dggt" selected>Active DGGT Baseline</option>
+                <option value="physir">PhysIR (Default TI)</option>
+                <!-- REPLACE: Add <option value="ours">Ours</option> when Ours frames exist -->
+              </select>
+            </div>
+            <p class="wipe-help">Drag the divider horizontally across the frame, touch-scrub, or focus the handle and press Left/Right arrow keys while playback loops.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="transport" id="comparison-controls" role="group" aria-label="2D comparison synchronized playback" data-frame-rate="5">
+        <button type="button" class="play-button" data-play disabled aria-controls="compare-reference compare-baseline compare-physir" data-playing="false">
+          <svg class="icon-play" width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <path d="M4.25 2.75L13 8L4.25 13.25V2.75Z"/>
+          </svg>
+          <svg class="icon-pause" width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <rect x="3.5" y="2.75" width="3.2" height="10.5" rx="0.8"/>
+            <rect x="9.3" y="2.75" width="3.2" height="10.5" rx="0.8"/>
+          </svg>
+          <span data-play-label>Loading</span>
         </button>
+        <div class="step-group">
+          <button type="button" class="step-button" data-step="-1" disabled aria-label="Previous interpolated frame">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M10 3.5L5.5 8L10 12.5"/>
+            </svg>
+          </button>
+          <button type="button" class="step-button" data-step="1" disabled aria-label="Next interpolated frame">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 3.5L10.5 8L6 12.5"/>
+            </svg>
+          </button>
+        </div>
         <input id="comparison-frame" type="range" min="0" max="12" value="0" step="any" data-seek disabled
-          aria-label="二维对比进度" aria-valuetext="第 01 帧">
-        <output id="comparison-position" for="comparison-frame" data-position aria-live="off">第 01 帧</output>
+          aria-label="2D comparison timeline frame" aria-valuetext="Frame 01 · 1/12">
+        <output id="comparison-position" for="comparison-frame" data-position aria-live="off">Frame 01 · 1/12</output>
       </div>
-      <p class="media-error" id="comparison-error" role="status" hidden>对比图像加载失败，请刷新后重试。</p>
+      <p class="media-error" id="comparison-error" role="status" hidden>Failed to load comparison frames. Reload the page or verify assets/compare/.</p>
+    </section>
+
+    <section id="results" class="content-section" aria-labelledby="results-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="results-title">Quantitative Results</h2>
+          <p class="section-summary">Benchmark structure on Dynamic_LTR (scene17). Numeric results are withheld pending final evaluation.</p>
+        </div>
+      </div>
+
+      <div class="table-scroll">
+        <table class="results-table">
+          <caption class="sr-only">Quantitative benchmark table on Dynamic_LTR scene17 with pending placeholder cells</caption>
+          <thead>
+            <tr>
+              <th scope="col">Method</th>
+              <th scope="col">Role</th>
+              <!-- REPLACE: Confirm final metric columns -->
+              <th scope="col" class="num">PSNR (↑)</th>
+              <th scope="col" class="num">SSIM (↑)</th>
+              <th scope="col" class="num">LPIPS (↓)</th>
+              <th scope="col" class="num">tLPIPS (↓)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>PhysIR (Default TI)</td>
+              <td><span class="role-badge is-baseline">Baseline</span></td>
+              <td class="num">&ndash;</td>
+              <td class="num">&ndash;</td>
+              <td class="num">&ndash;</td>
+              <td class="num">&ndash;</td>
+            </tr>
+            <tr>
+              <td>DGGT + RIFE</td>
+              <td><span class="role-badge is-baseline">Baseline</span></td>
+              <td class="num">&ndash;</td>
+              <td class="num">&ndash;</td>
+              <td class="num">&ndash;</td>
+              <td class="num">&ndash;</td>
+            </tr>
+            <tr>
+              <td>DGGT + TAPIP3D</td>
+              <td><span class="role-badge is-baseline">Baseline</span></td>
+              <td class="num">&ndash;</td>
+              <td class="num">&ndash;</td>
+              <td class="num">&ndash;</td>
+              <td class="num">&ndash;</td>
+            </tr>
+            <!-- REPLACE: Populate verified metrics for Ours when evaluation finishes -->
+            <tr class="is-ours">
+              <td>Ours (Pending)</td>
+              <td><span class="role-badge is-ours-badge">Ours · Pending</span></td>
+              <td class="num">&ndash;</td>
+              <td class="num">&ndash;</td>
+              <td class="num">&ndash;</td>
+              <td class="num">&ndash;</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-footnote">
+        Note: All metric cells display &ldquo;&ndash;&rdquo; as placeholders pending final benchmark evaluation on Dynamic_LTR; no quantitative numbers are fabricated or interpolated.<!-- REPLACE: Add dataset split and protocol details once scores are populated -->
+      </p>
     </section>
 
     <section id="masks" class="content-section masks" aria-labelledby="masks-title">
       <div class="section-heading">
         <div>
-          <h2 id="masks-title">动态掩码</h2>
-          <p class="section-summary">三段预览取自 scene17。橙色为现有运动标注，先用于展示掩码版式。</p>
+          <h2 id="masks-title">Dynamic Motion Masks</h2>
+          <p class="section-summary">Three synchronized temporal segments from scene17 showing existing motion annotations excluding ignore masks (the final segment pads frame 19 to match duration).</p>
         </div>
       </div>
-      <div class="strip" tabindex="0" aria-label="并排的三段动态掩码视频">
+
+      <div class="timeline-header">
+        <span class="timeline-legend">
+          <i class="legend-dot motion-dot" aria-hidden="true"></i>
+          <span>Active Motion Region</span>
+        </span>
+      </div>
+
+      <div class="timeline-rail" aria-hidden="true">
+        <span class="timeline-node"><i class="timeline-dot"></i>Seg 01 · 00–06</span>
+        <span class="timeline-node"><i class="timeline-dot"></i>Seg 02 · 07–13</span>
+        <span class="timeline-node"><i class="timeline-dot"></i>Seg 03 · 14–19</span>
+      </div>
+
+      <div class="mask-strip" aria-label="Three synchronized temporal motion mask videos">
         <figure class="media-figure">
           <div class="frame mask-frame">
             <video id="mask-start" src="./assets/mask-start.mp4" poster="./assets/mask-start.jpg"
-              autoplay loop muted playsinline aria-label="起始段运动掩码视频"></video>
+              autoplay loop muted playsinline aria-label="Segment 01 motion mask video, frames 00 to 06"></video>
           </div>
-          <figcaption class="strip-caption">起始段 <span>00–06 帧</span></figcaption>
+          <figcaption class="strip-caption">
+            <span>Segment 01</span>
+            <span class="strip-meta">Frames 00–06</span>
+          </figcaption>
         </figure>
         <figure class="media-figure">
           <div class="frame mask-frame">
             <video id="mask-middle" src="./assets/mask-middle.mp4" poster="./assets/mask-middle.jpg"
-              autoplay loop muted playsinline aria-label="中段运动掩码视频"></video>
+              autoplay loop muted playsinline aria-label="Segment 02 motion mask video, frames 07 to 13"></video>
           </div>
-          <figcaption class="strip-caption">中段 <span>07–13 帧</span></figcaption>
+          <figcaption class="strip-caption">
+            <span>Segment 02</span>
+            <span class="strip-meta">Frames 07–13</span>
+          </figcaption>
         </figure>
         <figure class="media-figure">
           <div class="frame mask-frame">
             <video id="mask-end" src="./assets/mask-end.mp4" poster="./assets/mask-end.jpg"
-              autoplay loop muted playsinline aria-label="末段运动掩码视频"></video>
+              autoplay loop muted playsinline aria-label="Segment 03 motion mask video, frames 14 to 19"></video>
           </div>
-          <figcaption class="strip-caption">末段 <span>14–19 帧</span></figcaption>
+          <figcaption class="strip-caption">
+            <span>Segment 03</span>
+            <span class="strip-meta">Frames 14–19</span>
+          </figcaption>
         </figure>
       </div>
-      <p class="strip-hint">横向滑动查看三段视频。</p>
-      <div class="transport" id="mask-controls" role="group" aria-label="三段掩码同步播放" data-frame-rate="5">
-        <button type="button" class="play-button" data-play aria-controls="mask-start mask-middle mask-end">
-          <span class="play-icon" aria-hidden="true"></span><span data-play-label>播放</span>
+
+      <div class="transport" id="mask-controls" role="group" aria-label="Motion mask synchronized playback" data-frame-rate="5">
+        <button type="button" class="play-button" data-play aria-controls="mask-start mask-middle mask-end" data-playing="false">
+          <svg class="icon-play" width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <path d="M4.25 2.75L13 8L4.25 13.25V2.75Z"/>
+          </svg>
+          <svg class="icon-pause" width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <rect x="3.5" y="2.75" width="3.2" height="10.5" rx="0.8"/>
+            <rect x="9.3" y="2.75" width="3.2" height="10.5" rx="0.8"/>
+          </svg>
+          <span data-play-label>Play</span>
         </button>
-        <input type="range" min="0" max="7" value="0" step="any" data-seek aria-label="掩码视频进度">
-        <output data-position aria-live="off">00 / 06 帧</output>
+        <div class="step-group">
+          <button type="button" class="step-button" data-step="-1" aria-label="Previous mask frame">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M10 3.5L5.5 8L10 12.5"/>
+            </svg>
+          </button>
+          <button type="button" class="step-button" data-step="1" aria-label="Next mask frame">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 3.5L10.5 8L6 12.5"/>
+            </svg>
+          </button>
+        </div>
+        <input type="range" min="0" max="7" value="0" step="any" data-seek aria-label="Mask segment timeline frame">
+        <output data-position aria-live="off">00 / 06</output>
       </div>
-      <p class="media-error" id="mask-error" role="status" hidden>掩码视频加载失败，请刷新页面后再试。</p>
+      <p class="media-error" id="mask-error" role="status" hidden>Failed to load dynamic motion mask videos. Reload the page or verify local media files.</p>
     </section>
 
     <section id="bibtex" class="content-section" aria-labelledby="bibtex-title">
-      <div class="text-column">
-        <div class="section-heading citation-heading">
+      <div class="section-heading citation-heading">
+        <div>
           <h2 id="bibtex-title">BibTeX</h2>
-          <button type="button" id="copy-bibtex" class="copy-button" hidden>复制 BibTeX</button>
+          <p class="section-summary">Draft citation entry; update fields once preprint and archival details are published.</p>
         </div>
-        <pre class="citation-block"><code id="bibtex-entry">@misc{PAPER_KEY,
-  title  = {[PAPER_TITLE]},
-  author = {[AUTHOR_1] and [AUTHOR_2] and [AUTHOR_3]},
-  year   = {[YEAR]},
-  url    = {[PAPER_URL]}
-}</code></pre>
-        <p id="copy-status" class="copy-status" role="status" hidden></p>
-        <dl class="resource-placeholders" aria-label="待补充的资源链接">
-          <div id="paper-url" tabindex="-1">
-            <dt>Paper</dt>
-            <dd><code class="placeholder-token">[PAPER_URL]</code></dd>
-          </div>
-          <div id="code-url" tabindex="-1">
-            <dt>Code</dt>
-            <dd><code class="placeholder-token">[CODE_URL]</code></dd>
-          </div>
-        </dl>
+        <button type="button" id="copy-bibtex" class="btn btn-secondary">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/>
+            <path d="M10.5 5.5V3.5C10.5 2.95 10.05 2.5 9.5 2.5H3.5C2.95 2.5 2.5 2.95 2.5 3.5V9.5C2.5 10.05 2.95 10.5 3.5 10.5H5.5"/>
+          </svg>
+          <span>Copy BibTeX</span>
+        </button>
       </div>
+      <!-- REPLACE: Final BibTeX citation entry -->
+      <pre class="citation-block"><code id="bibtex-entry">@misc{buaa_ir4d_2026,
+  title  = {Physically Consistent Dynamic 3D Scene Reconstruction from Monocular Infrared Sequences},
+  author = {Author One and Author Two and Author Three},
+  year   = {2026},
+  note   = {Preprint under preparation, Beihang University}
+}</code></pre>
+      <p id="copy-status" class="copy-status" role="status" hidden></p>
     </section>
-    <noscript><p>启用 JavaScript 后可以播放视频、旋转点云和切换对比。</p></noscript>
+
+    <noscript>
+      <p class="noscript-banner">Enable JavaScript to interact with the 3D point cloud, synchronized playback controls, and split-wipe 2D frame comparator.</p>
+    </noscript>
   </main>
 
   <footer class="site-footer">
     <div class="shell footer-inner">
-      <span>红外动态场景重建</span>
-      <a href="#top">回到顶部 ↑</a>
+      <span>Infrared Dynamic 3D Scene Reconstruction · Beihang University Draft Preview</span>
+      <a href="#top" id="back-to-top" class="back-to-top">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M8 13V3"/>
+          <path d="M3.75 7.25L8 3L12.25 7.25"/>
+        </svg>
+        <span>Back to Top</span>
+      </a>
     </div>
   </footer>
 </body>
